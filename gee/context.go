@@ -13,6 +13,8 @@ type Context struct {
 	Method string
 	Params map[string] string // 存储路由参数到param中
 	StatusCode int
+	handlers []HandleFunc // 中间件
+	index int // 执行到了第几个中间件
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -22,6 +24,15 @@ func newContext(w http.ResponseWriter, r *http.Request) *Context {
 		Path: r.URL.Path,
 		Method: r.Method,
 		Params: make(map[string]string),
+		index: -1,
+	}
+}
+
+func (context *Context) Next()  {
+	context.index++
+	n := len(context.handlers)
+	for ; context.index< n; context.index++ {
+		context.handlers[context.index](context)
 	}
 }
 
@@ -73,4 +84,9 @@ func (context *Context) HTML(code int, html string) {
 	context.setHeader("Content-Type", "text/html")
 	context.Status(code)
 	context.Writer.Write([]byte(html))
+}
+
+func (context *Context) Fail(code int, err string) {
+	context.index = len(context.handlers)
+	context.JSON(code, H{"message": err})
 }

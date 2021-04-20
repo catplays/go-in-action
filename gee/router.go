@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -51,20 +52,19 @@ func parsePattern(pattern string) []string {
 
 func (router *Router) handle(context *Context) {
 	// 处理路由
-	
 	node, params := router.GetRoute(context.Method, context.Path)
 	if node != nil {
 		context.Params = params
 		urlKey :=  fmt.Sprintf("%s-%s", context.Method, node.pattern)
 		if handler, ok := router.handlers[urlKey]; ok {
-			handler(context)
-			return
+			context.handlers = append(context.handlers, handler)
 		}
+	} else {
+		context.handlers = append(context.handlers, func(c *Context) {
+			c.String(http.StatusNotFound, "404 NOT FOUND: %s", c.Path)
+		})
 	}
-
-
-	fmt.Fprintf(context.Writer, "404 not found.")
-
+	context.Next()
 }
 
 func (router *Router) GetRoute(method string, path string) (*Node, map[string]string) {

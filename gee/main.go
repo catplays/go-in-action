@@ -7,6 +7,10 @@ import (
 
 func main() {
 	engine := New()
+	// 指定静态文件目录
+	engine.Static("/assets", "./gee/static")
+	// 注册中间件
+	engine.Use(Logger(), Recover())
 	engine.Get("/", IndexHandler)
 	v1Group := engine.Group("/v1")
 	v1Group.Get("/", func(c *Context) {
@@ -31,17 +35,22 @@ func main() {
 		})
 	}
 
+	engine.Get("/panic", func(c *Context) {
+		names := []string{"geektutu"}
+		c.String(http.StatusOK, names[100])
+	})
+
 	if err := engine.Run(":9999"); err != nil {
 		panic("")
 	}
 }
 
-// handler echoes r.URL.Path
+// middleware echoes r.URL.Path
 func IndexHandler(c *Context) {
 	fmt.Fprintf(c.Writer, "URL.Path = %q\n", c.Path)
 }
 
-// handler echoes r.URL.Header
+// middleware echoes r.URL.Header
 func HelloHandler(c *Context) {
 	for k, v := range c.Req.Header {
 		fmt.Fprintf(c.Writer, "Header[%q] = %q\n", k, v)

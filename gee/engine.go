@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 )
 
 type Engine struct {
@@ -31,7 +32,16 @@ func (engine *Engine) Run(addr string) (err error) {
 }
 
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request)  {
+	var middlewares []HandleFunc
+	// 通过前缀简单判断这个请求需要经过哪些handler
+	for _, group := range engine.groups {
+		if strings.HasPrefix(req.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...)
+		}
+	}
+
 	context := newContext(w, req)
+	context.handlers = middlewares
 	engine.router.handle(context)
 }
 

@@ -1,6 +1,10 @@
 package main
 
-import "log"
+import (
+	"log"
+	"net/http"
+	"path"
+)
 
 // 路由分组
 type RouterGroup struct {
@@ -20,6 +24,12 @@ func (group *RouterGroup) Group(prefix string) *RouterGroup {
 	return newGroup
 }
 
+// 将中间件应用到分组上
+func (group *RouterGroup) Use(middlewares ...HandleFunc)  {
+	group.middlewares = append(group.middlewares, middlewares...)
+}
+
+
 
 // @title 给分组添加路由
 // @param method 路由的请求方法
@@ -37,4 +47,23 @@ func (group *RouterGroup) Get(pattern string, handleFunc HandleFunc) {
 
 func (group *RouterGroup) Post(pattern string, handleFunc HandleFunc) {
 	group.addRouter("POST", pattern, handleFunc)
+}
+
+func (group *RouterGroup) Static(relativePath string, rootPath string) {
+	handler := group.createStaticFileHandler(relativePath, http.Dir(rootPath))
+	urlPattern := path.Join(relativePath, "/*filePath")
+	group.Get(urlPattern, handler)
+}
+
+func (group *RouterGroup)  createStaticFileHandler(relativePath string, fd http.Dir) HandleFunc {
+	absolutePath := path.Join(group.prefix, relativePath)
+	fileServer := http.StripPrefix(absolutePath, http.FileServer(fd))
+	return func(c *Context) {
+		file := c.Param("filePath")
+		if _, err := fd.Open(file); err != nil {
+			c.Status(http.StatusNotFound)
+			return
+		}
+		fileServer.ServeHTTP(c.Writer, c.Req)
+	}
 }
