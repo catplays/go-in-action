@@ -11,7 +11,7 @@ type cache struct {
 	cacheBytes int64
 }
 
-func (c cache) add(key string, value ByteView)  {
+func (c *cache) add(key string, value ByteView)  {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	if c.lru == nil {
@@ -21,7 +21,7 @@ func (c cache) add(key string, value ByteView)  {
 
 }
 
-func (c cache) get(key string) (value ByteView, b bool)  {
+func (c *cache) get(key string) (value ByteView, b bool)  {
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	if c.lru == nil {

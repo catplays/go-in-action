@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strconv"
 )
-
+//节点管理
 type Map struct {
 	hash Hash 		// hash算法
 	replicas int	//	虚拟节点的数量
@@ -31,7 +31,7 @@ func New(replicas int, fn Hash) *Map {
 }
 
 // 添加真实节点的名称到hash上
-func (m Map) Add(keys ...string)  {
+func (m *Map) Add(keys ...string)  {
 	for _, key := range keys {
 		for i:=0; i< m.replicas; i++ {
 			hash := m.hash([]byte(strconv.Itoa(i)+ key))

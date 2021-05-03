@@ -37,7 +37,7 @@ func (c Cache) Get(key string) (Value,bool) {
 	return nil,false
 }
 
-func (c Cache) Add(key string, value Value)  {
+func (c *Cache) Add(key string, value Value)  {
 	if ele, ok := c.cache[key]; ok {
 		c.ll.MoveToFront(ele)
 		kv := ele.Value.(*Entry)
