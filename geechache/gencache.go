@@ -1,6 +1,7 @@
 package geechache
 
 import (
+	"catwang.com/go-in-action/geechache/singleflight"
 	"fmt"
 	"log"
 	"sync"
@@ -10,11 +11,13 @@ type Getter interface {
 	Get (key string) ([]byte, error)
 }
 
+// 管理逻辑定义的缓存集群
 type Group struct {
 	name string
 	getter Getter
 	mainCache cache
 	peers PeerPicker
+	loader *singleflight.Group
 }
 var (
 	mux sync.RWMutex
@@ -42,6 +45,7 @@ func NewGroup(name string, byteCache int64,getter Getter ) *Group {
 		mainCache: cache{
 			cacheBytes:byteCache,
 		},
+		loader: &singleflight.Group{},
 	}
 	groups[name] = group
 	return group
@@ -66,16 +70,22 @@ func (g *Group) Get(key string)(ByteView, error)  {
 	return g.load(key)
 }
 
-func (g *Group) load(key string) (ByteView, error) {
-	if g.peers != nil {
-		if peerGetter, ok := g.peers.PickPeer(key); ok {
-			if value, err := g.getFromPeer(key, peerGetter); err == nil {
-				return value,nil
+func (g *Group) load(key string) (byteView ByteView,err error) {
+	val, err := g.loader.Do(key, func() (interface{}, error) {
+		if g.peers != nil {
+			if peerGetter, ok := g.peers.PickPeer(key); ok {
+				if value, err := g.getFromPeer(key, peerGetter); err == nil {
+					return value,nil
+				}
+				log.Println("[GeeCache] Failed to get from peer",)
 			}
-			log.Println("[GeeCache] Failed to get from peer",)
 		}
+		return g.getLocally(key)
+	})
+	if err == nil {
+		return val.(ByteView), nil
 	}
-	return g.getLocally(key)
+	return ByteView{}, err
 }
 
 func (g *Group) getLocally(key string) (ByteView, error)  {
