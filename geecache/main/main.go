@@ -1,8 +1,8 @@
 package main
 
 import (
-	"catwang.com/go-in-action/geechache"
-	http2 "catwang.com/go-in-action/geechache/http"
+	"catwang.com/go-in-action/geecache"
+	http2 "catwang.com/go-in-action/geecache/http"
 	"flag"
 	"fmt"
 	"log"
@@ -43,7 +43,7 @@ func main() {
 	startCacheServer(addrMap[port],[]string(addrs), gee)
 }
 
-func startCacheServer(addr string, addrs []string, gee *geechache.Group) {
+func startCacheServer(addr string, addrs []string, gee *geecache.Group) {
 	peers := http2.NewHttpPool(addr)
 	peers.Set(addrs...)
 	gee.RegisterPeers(peers)
@@ -51,7 +51,7 @@ func startCacheServer(addr string, addrs []string, gee *geechache.Group) {
 	log.Fatal(http.ListenAndServe(addr[7:], peers))
 }
 
-func startApiServer(addr string, gee *geechache.Group) {
+func startApiServer(addr string, gee *geecache.Group) {
 	http.Handle("/api", http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
 			key := request.URL.Query().Get("key")
@@ -67,8 +67,8 @@ func startApiServer(addr string, gee *geechache.Group) {
 	log.Fatal(http.ListenAndServe(addr[7:],nil))
 }
 
-func createGroup() *geechache.Group {
-	return geechache.NewGroup("scores", 2<<10, geechache.GetterFunc(func(key string) ([]byte, error) {
+func createGroup() *geecache.Group {
+	return geecache.NewGroup("scores", 2<<10, geecache.GetterFunc(func(key string) ([]byte, error) {
 		log.Println("[SlowDB] search key", key)
 		if v, ok := db[key]; ok {
 			return []byte(v), nil
