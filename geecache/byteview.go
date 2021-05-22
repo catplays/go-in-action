@@ -1,4 +1,4 @@
-package geechache
+package geecache
 
 type ByteView struct {
 	b []byte // b 将会存储真实的缓存值

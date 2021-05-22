@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 )
+//一致性hash
 //节点管理
 type Map struct {
 	hash Hash 		// hash算法

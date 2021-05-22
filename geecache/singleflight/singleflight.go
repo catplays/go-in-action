@@ -14,7 +14,7 @@ type Call struct {
 	val interface{}
 	err error
 }
-
+// 针对同一个key，加锁解决缓存击穿的问题
 func (g *Group) Do(key string, fn func()(interface{}, error)) (interface{}, error)  {
 	g.lock.Lock()
 	if g.m == nil {

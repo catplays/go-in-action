@@ -1,7 +1,8 @@
-package geechache
+package geecache
 
 import (
-	"catwang.com/go-in-action/geechache/singleflight"
+	"catwang.com/go-in-action/geecache/protobuf"
+	"catwang.com/go-in-action/geecache/singleflight"
 	"fmt"
 	"log"
 	"sync"
@@ -112,10 +113,15 @@ func (g *Group) RegisterPeers(peer PeerPicker) {
 }
 
 func (g *Group) getFromPeer(key string, getter PeerGetter) (ByteView, error) {
-	bytes, err := getter.Get(g.name, key)
+	req := &protobuf.Request{
+		Group: g.name,
+		Key: key,
+	}
+	resp := &protobuf.Response{}
+	err := getter.Get(req, resp)
 	if err != nil {
 		return ByteView{}, err
 	}
-	return ByteView{b: bytes}, nil
+	return ByteView{b: resp.Value}, nil
 }
 

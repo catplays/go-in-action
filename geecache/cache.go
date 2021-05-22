@@ -1,7 +1,7 @@
-package geechache
+package geecache
 
 import (
-	"catwang.com/go-in-action/geechache/lru"
+	"catwang.com/go-in-action/geecache/lru"
 	"sync"
 )
 

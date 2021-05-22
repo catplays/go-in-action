@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package="./";
+package protobuf;
+// 定义的请求缓存的请求体
+message Request {
+	string group = 1;
+	string key = 2;
+}
+
+// 定义返回的响应，结果是一个byte数组
+message Response {
+	bytes value = 1;
+}
+
+service GroupCache {
+	rpc Get(Request) returns (Response);
+}

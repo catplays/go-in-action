@@ -1,8 +1,10 @@
 package http
 
 import (
-	"catwang.com/go-in-action/geechache"
-	"catwang.com/go-in-action/geechache/consistenthash"
+	"catwang.com/go-in-action/geecache"
+	"catwang.com/go-in-action/geecache/consistenthash"
+	"catwang.com/go-in-action/geecache/protobuf"
+	"google.golang.org/protobuf/proto"
 	"log"
 	"net/http"
 	"strings"
@@ -41,19 +43,28 @@ func (h *HttpPool) ServeHTTP(w http.ResponseWriter, req *http.Request)  {
 	}
 	groupName := parts[0]
 	key := parts[1]
-	group := geechache.GetGroup(groupName)
+	group := geecache.GetGroup(groupName)
 	if group == nil {
 		http.Error(w, "no such group: "+groupName, http.StatusNotFound)
 		return
 	}
 	view, err := group.Get(key)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Write the value to the response body as a proto message.
+	body, err := proto.Marshal(&protobuf.Response{
+		Value: view.ByteSlice(),
+	})
+
+	if err != nil {
 		http.Error(w, "no such key:"+key, http.StatusNotFound)
 		return
 	}
 	log.Printf("search key:%v group:%v in:%v",key, groupName, h.self)
 	w.Header().Set("Content-Type","application/octet-stream")
-	w.Write(view.ByteSlice())
+	w.Write(body)
 }
 
 // 实例化哈希一致性算法，并添加节点
@@ -71,7 +82,7 @@ func (h *HttpPool) Set(addrs ...string) {
 }
 
 // 包装了一致性哈希算法的Get方法，根据key找到一个缓存节点，并返回这个节点的httpClient
-func (h *HttpPool) PickPeer(key string) (geechache.PeerGetter, bool) {
+func (h *HttpPool) PickPeer(key string) (geecache.PeerGetter, bool) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	if peer := h.peers.Get(key); peer != "" && peer!= h.self {
