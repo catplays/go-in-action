@@ -55,6 +55,4 @@ func put(key string, val string)  {
 		*headNode = thisNode
 		return
 	}
-
-
 }
