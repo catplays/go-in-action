@@ -2,6 +2,7 @@ package algorithm
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -124,4 +125,38 @@ func singleNon(start int, end int, nums []int) int {
 	}
 	mid := (start +end)/2
 	return singleNon(start,mid, nums) ^ singleNon(mid+1,end, nums)
+}
+
+
+func luckyNumbers (matrix [][]int) []int {
+	var length int = len(matrix)
+	if  length == 0 {
+		return []int{}
+	}
+	var colLen int = len(matrix[0])
+
+	var result []int
+	for i:=0;i<length ;i++ {
+		min := math.MaxInt32
+		idx := 0
+		// 第i行的最小值
+		for j:=0;j<colLen; j++ {
+			if matrix[i][j] < min {
+				min = matrix[i][j]
+				idx = j
+			}
+		}
+
+		// 找出idx列的最大值
+		max := math.MinInt32
+		for k:=0;k<length ;k++ {
+			if matrix[k][idx] > max {
+				max = matrix[k][idx]
+			}
+		}
+		if min == max {
+			result = append(result,min)
+		}
+	}
+	return result
 }
