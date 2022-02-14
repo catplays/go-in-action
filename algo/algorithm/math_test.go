@@ -29,3 +29,9 @@ func TestMinSubArrayLen(t *testing.T) {
 
 	ass.Equal(0,minSubArrayLen(11,[]int{1,1,1,1,1,1,1,1}))
 }
+
+func TestSingleNon(t *testing.T) {
+	arr := []int{1,1,2,3,3,4,4,8,8}
+	ass := assert.New(t)
+	ass.Equal(2,singleNonDuplicate(arr))
+}

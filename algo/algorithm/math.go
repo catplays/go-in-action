@@ -109,3 +109,19 @@ func rangeBitwiseAnd(left int, right int) int {
 	return ans
 }
 
+// 540. 有序数组中的单一元素
+func singleNonDuplicate(nums []int) int {
+	start,end := 0,len(nums)-1
+	return singleNon(start,end, nums)
+}
+
+func singleNon(start int, end int, nums []int) int {
+	if start == end {
+		return nums[start]
+	}
+	if start+1 == end {
+		return nums[start] ^ nums[end]
+	}
+	mid := (start +end)/2
+	return singleNon(start,mid, nums) ^ singleNon(mid+1,end, nums)
+}
