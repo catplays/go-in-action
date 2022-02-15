@@ -5,10 +5,8 @@ https://leetcode-cn.com/problems/combination-sum-iii/
 找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
 输入: k = 3, n = 9
 输出: [[1,2,6], [1,3,5], [2,3,4]]
-
 216
  */
-
 func combinationSum3_1(k int, n int) [][]int {
 	// 每一位数字选或者不选，一共有2^n个组合。用一个9位二进制数mask表示选择的结果，
 	var arr []int
