@@ -35,3 +35,9 @@ func TestSingleNon(t *testing.T) {
 	ass := assert.New(t)
 	ass.Equal(2,singleNonDuplicate(arr))
 }
+
+func TestContainsNearbyAlmostDuplicate(t *testing.T) {
+	arr := []int{2147483640,2147483641}
+	ass := assert.New(t)
+	ass.Equal(true,containsNearbyAlmostDuplicate(arr, 1, 100))
+}
