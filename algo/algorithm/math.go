@@ -3,6 +3,7 @@ package algorithm
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strconv"
 )
 
@@ -186,4 +187,31 @@ func containsNearbyAlmostDuplicate(nums []int, k int, t int) bool {
 		end++
 	}
 	return false
+}
+
+/**
+https://leetcode-cn.com/problems/rank-transform-of-an-array/
+1331. 数组序号转换
+ */
+func arrayRankTransform(arr []int) []int {
+	dataMap := make(map[int]int, 0)
+	uniqueArr := make([]int, 0)
+
+	for _,val := range arr {
+		_, ok := dataMap[val]
+		if !ok {
+			dataMap[val] = 1
+			uniqueArr = append(uniqueArr, val)
+		}
+	}
+	sort.Sort(sort.IntSlice(uniqueArr))
+	for i,val := range uniqueArr {
+		dataMap[val] = i+1
+	}
+	res := make([]int,0)
+	for _, val := range arr {
+		index,_ := dataMap[val]
+		res = append(res, index)
+	}
+	return res
 }
