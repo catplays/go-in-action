@@ -113,3 +113,40 @@ func calculate3(s string) int {
 	}
 	return res
 }
+
+/**
+https://leetcode-cn.com/problems/basic-calculator/
+224. 基本计算器 给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
+//(1-2-(4+5-2))-(6+8)
+*/
+func calculate3I(s string) int {
+	sign :=1
+	n := len(s)
+	stack := []int{1}
+	res := 0
+	for i:=0;i<n; {
+		switch s[i] {
+		case ' ':
+			i++
+		case '+':
+			sign = stack[len(stack)-1]
+			i++
+		case '-':
+			sign = -stack[len(stack)-1]
+			i++
+		case '(':
+			stack = append(stack,sign)
+			i++
+		case ')':
+			stack = stack[:len(stack)-1]
+			i++
+		default:
+			num :=0
+			for ;i<n && s[i]>='0' && s[i]<='9';i++ {
+				num = num*10+ int(s[i]-'0')
+			}
+			res += sign*num
+		}
+	}
+	return res
+}
