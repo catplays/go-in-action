@@ -26,3 +26,14 @@ func TestStack(t *testing.T) {
 	val, err := stack.Pop()
 	fmt.Println(err)
 }
+func TestMyQueue(t *testing.T) {
+	ass := assert.New(t)
+	queue:= Constructor()
+	queue.Push(1)
+
+	val :=queue.Pop()
+	ass.Equal(1, val)
+
+	ass.Equal(true,queue.Empty() )
+}
+

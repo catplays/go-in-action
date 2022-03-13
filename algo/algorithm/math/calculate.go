@@ -150,3 +150,19 @@ func calculate3I(s string) int {
 	}
 	return res
 }
+
+/**
+给定一个非负整数 num，反复将各个位上的数字相加，直到结果为一位数。返回这个结果。
+https://leetcode-cn.com/problems/add-digits/
+ */
+func addDigits(num int) int {
+	for  num >= 10{
+		res := 0
+		for num > 0{
+			res += num%10
+			num/=10
+		}
+		num = res
+	}
+	return num
+}
