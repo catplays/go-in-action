@@ -33,3 +33,32 @@ func longestWord(words []string) string {
 	}
 	return res
 }
+
+func reverseVowels(s string) string {
+	strs := "AEIOUaeiou"
+	data := make(map[rune]struct{},0)
+	for _, str := range []rune(strs) {
+		data[str] = struct{}{}
+	}
+	n := len(s)
+	left, right := int32(0), int32(n-1)
+	arr := []rune(s)
+	for left < right {
+		_, ok := data[arr[left]]
+		if  !ok {
+			left++
+			continue
+		}
+		for left< right {
+			_, ok = data[arr[right]]
+			if ok {
+				break
+			}
+			right--
+		}
+		arr[left],arr[right] = arr[right], arr[left]
+		right--
+		left++
+	}
+	return string(arr)
+}

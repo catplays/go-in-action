@@ -13,3 +13,10 @@ func TestString(t *testing.T) {
 	ass.Equal("english", longestWord(arr1))
 
 }
+
+func TestReverseVowels(t *testing.T) {
+	ass:= assert.New(t)
+	ass.Equal("leotcede", reverseVowels("leetcode"))
+
+}
+
