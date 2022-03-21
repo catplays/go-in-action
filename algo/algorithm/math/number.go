@@ -1,16 +1,16 @@
 package math
 
 func isUgly(n int) bool {
-	for n>1 {
-		if n %2 ==0 {
-			n /=2
+	for n > 1 {
+		if n%2 == 0 {
+			n /= 2
 			continue
 		}
-		if n %3 == 0 {
-			n /=3
+		if n%3 == 0 {
+			n /= 3
 			continue
 		}
-		if n % 5==0 {
+		if n%5 == 0 {
 			n /= 5
 			continue
 		}
@@ -25,20 +25,20 @@ func isUgly(n int) bool {
 
 链接：https://leetcode-cn.com/problems/first-bad-version
 
- */
+*/
 func firstBadVersion(n int) int {
-	start, end := 1,n
-	mid := (start+end)/2
-	for start<= end {
+	start, end := 1, n
+	mid := (start + end) / 2
+	for start <= end {
 		// 是错误版本，往前找
-		mid = (start+end)/2
+		mid = (start + end) / 2
 		if isBadVersion(mid) {
-			if !isBadVersion(mid-1) {
+			if !isBadVersion(mid - 1) {
 				return mid
 			}
-			end = mid-1
+			end = mid - 1
 		} else {
-			start = mid+1
+			start = mid + 1
 		}
 
 	}
@@ -49,25 +49,25 @@ func isBadVersion(num int) bool {
 }
 
 func isPowerOfThree(n int) bool {
-	for n>1 {
+	for n > 1 {
 		if n%3 == 0 {
-			n /=3
+			n /= 3
 			continue
 		}
 		return false
 	}
-	return n==1
+	return n == 1
 }
 
 func isPowerOfFour(n int) bool {
-	for n>1 {
+	for n > 1 {
 		if n%4 == 0 {
-			n /=4
+			n /= 4
 			continue
 		}
 		return false
 	}
-	return n==1
+	return n == 1
 }
 
 /**
@@ -77,15 +77,36 @@ func isPowerOfFour(n int) bool {
 
 */
 func countBits(n int) []int {
-	highBit :=0
-	res := make([]int,0)
+	highBit := 0
+	res := make([]int, 0)
 	res = append(res, 0)
-	for i:=1; i<=n;i++ {
+	for i := 1; i <= n; i++ {
 
-		if i &(i-1) == 0 {
+		if i&(i-1) == 0 {
 			highBit = i
 		}
-		res = append(res,res[i-highBit]+1)
+		res = append(res, res[i-highBit]+1)
 	}
 	return res
+}
+
+/**
+完全平方数
+*/
+func isPerfectSquare(num int) bool {
+	start, end := 0, num
+
+	for start <= end {
+		n := start + (end - start) / 2
+		k := n * n
+		if k == num {
+			return true
+		}
+		if k> num {
+			end = n-1
+		} else {
+			start = n+1
+		}
+	}
+	return false
 }
