@@ -36,7 +36,7 @@ func longestWord(words []string) string {
 
 func reverseVowels(s string) string {
 	strs := "AEIOUaeiou"
-	data := make(map[rune]struct{},0)
+	data := make(map[rune]struct{}, 0)
 	for _, str := range []rune(strs) {
 		data[str] = struct{}{}
 	}
@@ -45,20 +45,66 @@ func reverseVowels(s string) string {
 	arr := []rune(s)
 	for left < right {
 		_, ok := data[arr[left]]
-		if  !ok {
+		if !ok {
 			left++
 			continue
 		}
-		for left< right {
+		for left < right {
 			_, ok = data[arr[right]]
 			if ok {
 				break
 			}
 			right--
 		}
-		arr[left],arr[right] = arr[right], arr[left]
+		arr[left], arr[right] = arr[right], arr[left]
 		right--
 		left++
 	}
 	return string(arr)
+}
+
+func canConstruct(ransomNote string, magazine string) bool {
+
+	data := make(map[uint8]int, 0)
+	length := len(magazine)
+	for i := 0; i < length; i++ {
+		key := magazine[i] - 'a'
+		count, ok := data[key]
+		if !ok {
+			count = 0
+		}
+		data[key] = count + 1
+	}
+
+	for i := 0; i < len(ransomNote); i++ {
+		key := ransomNote[i] - 'a'
+		count, ok := data[key]
+		if !ok {
+			return false
+		}
+		count--
+		if count <= 0 {
+			delete(data, key)
+			continue
+		}
+		data[key] = count
+	}
+	return true
+}
+
+func isSubsequence(s string, t string) bool {
+	idx := 0
+	n, nt := len(s), len(t)
+	for i := 0; i < n; {
+		if idx >= nt || nt-idx < n-i {
+			return false
+		}
+		if s[i] != t[idx] {
+			idx++
+			continue
+		}
+		idx++
+		i++
+	}
+	return true
 }
