@@ -1,9 +1,19 @@
 package math
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"math"
 	"testing"
 )
+
+func TestInvest(t *testing.T) {
+	num := 30.0
+	years := 10.0
+	total := num * math.Pow(1.08,years)
+	fmt.Println(total)
+}
+
 
 func TestCalculate(t *testing.T) {
 	ass := assert.New(t)

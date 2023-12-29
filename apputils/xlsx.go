@@ -16,35 +16,37 @@ func ReadXlsx(path string) {
 	}
 
 	//cols := []int{7,8,9}
+	var rows []int = []int{1, 16, 17, 18, 46, 47, 48, 70, 71, 95, 96, 114, 115, 122, 123}
 	// Iterate through each sheet
 	for _, sheet := range xlFile.Sheets {
 		fmt.Printf("Sheet: %s\n", sheet.Name)
 
 		// Iterate through each row in the sheet
 		for rowIndex, row := range sheet.Rows {
-			if rowIndex <= 2 {
+			if ContainsInt(rows, rowIndex+1) {
 				continue
 			}
 			fmt.Println(fmt.Sprintf("第%d行", rowIndex))
-			fmt.Println(fmt.Sprintf("第%d行", len(row.Cells)))
+
 			// Iterate through each cell in the row
-			L := row.Cells[7].Value
-			a := row.Cells[8].Value
-			b := row.Cells[9].Value
+			L := row.Cells[1].Value
+			a := row.Cells[2].Value
+			b := row.Cells[3].Value
+			fmt.Println(fmt.Sprintf("%v", L))
 			html := Post(L, a, b)
 			x, y := GetFrom(html)
-			columnIndex := 17
+			columnIndex := 6
 			if len(row.Cells) < columnIndex {
 				// If the column doesn't exist, create it
 				for j := len(row.Cells); j < columnIndex; j++ {
 					row.AddCell()
 				}
 			}
-			row.Cells[15].SetValue(x)
-			row.Cells[16].SetValue(y)
+			row.Cells[4].SetValue(x)
+			row.Cells[5].SetValue(y)
 		}
 	}
-	xlFile.Save("dalian_modified.xlsx")
+	xlFile.Save("/Users/catwang/Downloads/liaobo_modified.xlsx")
 }
 
 // RGB2Lab 将RGB颜色转换为LAB颜色

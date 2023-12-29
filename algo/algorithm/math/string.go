@@ -108,3 +108,30 @@ func isSubsequence(s string, t string) bool {
 	}
 	return true
 }
+
+
+func longestPalindrome(s string) int {
+	data := make(map[int32]int,0)
+	for _,val := range s {
+		v, ok := data[val-'a']
+		if ok {
+			data[val-'a'] = v+1
+		} else {
+			data[val-'a'] = 1
+		}
+	}
+	flag := false
+	count := 0
+	for _,val := range data {
+		if val %2 ==0 {
+			count+=val
+		} else {
+			count+=val-1
+			flag = true
+		}
+	}
+	if flag {
+		count++
+	}
+	return count
+}

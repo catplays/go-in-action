@@ -1,4 +1,4 @@
-package algorithm
+package math
 
 import (
 	"fmt"
@@ -214,4 +214,27 @@ func arrayRankTransform(arr []int) []int {
 		res = append(res, index)
 	}
 	return res
+}
+
+
+func countSegments(s string) int {
+	if len(s) == 0 {
+		return 0
+	}
+	count := 0
+	preNotEmpty := false
+	for _, char := range s {
+		if char == ' ' {
+			if preNotEmpty {
+				count++
+				preNotEmpty = false
+			}
+		} else {
+			preNotEmpty = true
+		}
+	}
+	if s[len(s)-1] != ' ' {
+		count++
+	}
+	return count
 }

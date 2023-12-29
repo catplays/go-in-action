@@ -83,3 +83,36 @@ func imageSmoother(img [][]int) [][]int {
 	}
 	return res
 }
+
+func thirdMax(nums []int) int {
+	arr := make([]int, 0)
+	for i := 0; i < len(nums); i++ {
+
+		if len(arr) ==0 {
+			arr = append(arr, nums[i])
+			continue
+		}
+		// 比较
+		for j := 0; j < len(arr); j++ {
+			if arr[j] == nums[i] {
+				break
+			}
+			// 来了最大的数，后移
+			if nums[i] > arr[j] {
+				if len(arr) <3 {
+					arr = append(arr,0)
+				}
+				for k:=len(arr)-1;k>j;k-- {
+					arr[k] = arr[k-1]
+				}
+				arr[j] = nums[i]
+				break
+			}
+		}
+
+	}
+	if len(arr) > 2 {
+		return arr[2]
+	}
+	return arr[0]
+}

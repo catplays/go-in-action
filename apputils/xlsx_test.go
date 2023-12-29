@@ -6,7 +6,7 @@ import (
 )
 
 func TestReadXlsx(t *testing.T) {
-	file := "/Users/catwang/Downloads/dalian.xlsx"
+	file := "/Users/catwang/Downloads/liaobo.xlsx"
 	ReadXlsx(file)
 }
 

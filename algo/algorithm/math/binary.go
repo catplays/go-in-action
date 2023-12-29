@@ -16,3 +16,20 @@ func isOneBitCharacter(bits []int) bool {
 	}
 	return i==len(bits)-1
 }
+
+/**
+693. 交替位二进制数
+ */
+func hasAlternatingBits(n int) bool {
+	pre := n%2
+	n = n >> 1
+	for n>0 {
+		k := n%2
+		if pre^k ==0 {
+			return false
+		}
+		pre = k
+		n = n >> 1
+	}
+	return true
+}
